@@ -6,12 +6,23 @@ import * as serviceWorker from './serviceWorker';
 import axios from 'axios';
 import {BrowserRouter} from "react-router-dom";
 import {Provider} from 'react-redux';
-import {createStore} from "redux";
-import reducer from "./store/reducer";
+import { createStore, applyMiddleware, compose, combineReducers } from "redux";
+import burgerBuilder from "./store/reducers/burgerBuilder";
+import orderReducer from "./store/reducers/order";
+import thunk from 'redux-thunk';
 
 axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+//devtools docs
+const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
 
-const store = createStore(reducer);
+const rootReducer = combineReducers({
+    burgerBuilder: burgerBuilder,
+    order: orderReducer
+});
+
+const store = createStore(rootReducer,  composeEnhancers(
+    applyMiddleware(thunk)
+));
 
 const app = (
     <Provider store={store}>
