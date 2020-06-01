@@ -12,7 +12,7 @@ import authReducer from './store/reducers/auth';
 import thunk from 'redux-thunk';
 
 //devtools docs
-const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
+const composeEnhancers = process.env.NODE_ENV == "dev" ? (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) : null || compose;
 
 const rootReducer = combineReducers({
     burgerBuilder: burgerBuilder,
