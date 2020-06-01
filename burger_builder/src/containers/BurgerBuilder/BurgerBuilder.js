@@ -34,7 +34,12 @@ class BurgerBuilder extends Component {
 
     purchaseHandle = () => {
         //needs to be arrow function to contain correct value of this
-        this.setState({purchasing: true});
+        if ( this.props.isAuth ) {
+            this.setState({purchasing: true});
+        } else {
+            this.props.onSetRedirectPath('/checkout');
+            this.props.history.push("/auth");
+        }
     };
 
     purchaseContinue = () => {
@@ -61,7 +66,7 @@ class BurgerBuilder extends Component {
             burger = (
                 <Aux>
                     <Burger ingredients={this.props.ingr}/>
-                    <BuildControls ordered={this.purchaseHandle} purchasable={this.updatePurchaseState(this.props.ingr)} price={this.props.price} disabled={disabledInfo} ingredientAdded={this.props.onIngredientAdded} ingredientRemoved={this.props.onIngredientRemoved}/>
+                    <BuildControls isAuth={this.props.isAuth} ordered={this.purchaseHandle} purchasable={this.updatePurchaseState(this.props.ingr)} price={this.props.price} disabled={disabledInfo} ingredientAdded={this.props.onIngredientAdded} ingredientRemoved={this.props.onIngredientRemoved}/>
                 </Aux>
             );
             orderSummary = <OrderSummary price={this.props.price} purchaseCanceled={this.modalClosed} purchaseContinue={this.purchaseContinue} ingredients={this.props.ingr}/>;
@@ -82,7 +87,8 @@ const mapStateToProps = state => {
     return {
         ingr: state.burgerBuilder.ingredients,
         price: state.burgerBuilder.totalPrice,
-        error: state.burgerBuilder.error
+        error: state.burgerBuilder.error,
+        isAuth: state.auth.token !== null,
     };
 };
 
@@ -91,7 +97,8 @@ const mapDispatchToProps = dispatch => {
         onInitPurchase: () => dispatch(actions.purchaseInit()),
         onIngredientAdded: (name) => dispatch(actions.addIngredient(name)),
         onIngredientRemoved: (name) => dispatch(actions.removeIngredient(name)),
-        onInitIngredients: () => dispatch(actions.initIngredients())
+        onInitIngredients: () => dispatch(actions.initIngredients()),
+        onSetRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path))
     };
 };
 
