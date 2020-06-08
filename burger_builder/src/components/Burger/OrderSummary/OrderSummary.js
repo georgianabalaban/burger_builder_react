@@ -6,7 +6,7 @@ const orderSummary = (props) => {
         return (
             <li key={key}><span style={{textTransform: 'capitalize'}}>{key}</span>: {props.ingredients[key]}</li>
         );
-    })
+    });
 
     return (
         <Aux>
@@ -21,6 +21,6 @@ const orderSummary = (props) => {
             <Button clicked={props.purchaseContinue} btnType="Success">CONTINUE</Button>
         </Aux>
     )
-}
+};
 
 export default orderSummary;
